@@ -1,0 +1,17 @@
+<template>
+    <lightning-card>
+        <lightning-input name="titulo" label="Avaliação Name" placeholder="Coloque o Título" onchange={handleAvaliacao}>Título</lightning-input>
+        <lightning-textarea>Descrição</lightning-textarea>
+        <lightning-combobox
+        name="outputType"
+        label="Object for Storing Output"
+        value={outputType}
+        placeholder="Escolha a nota"
+        options={typeOptions}
+        onchange={handleOutputTypeChange}></lightning-combobox>
+        
+
+        <lightning-button>Salvar</lightning-button>
+        
+    </lightning-card>
+</template>
