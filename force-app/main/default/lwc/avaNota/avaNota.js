@@ -12,6 +12,11 @@ export default class AvaNota extends LightningElement {
         ]
     }
 
+    handleChange(event){
+        this.value = event.detail.value;
+        
+    }
+
     contactChangeVal(event) {
         const field = event.target.name;
         if (field) {

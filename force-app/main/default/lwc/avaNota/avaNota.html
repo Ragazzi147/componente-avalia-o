@@ -1,19 +1,29 @@
 <template>
     <lightning-card>
-        <lightning-icon></lightning-icon>
+        <div slot="title">
+            <h3>
+                <lightning-icon icon-name="standard:contact" size="small"></lightning-icon> Avaliação
+            </h3>
+        </div>
         
-        <lightning-input name="titulo" label="Avaliação Name" placeholder="Coloque o Título" onchange={handleAvaliacao}></lightning-input>
-        <lightning-textarea label="Descrição"></lightning-textarea>
-        <lightning-combobox
-        name="outputType"
-        label="Nota"
-        value={outputType}
-        placeholder="Escolha a nota"
-        options={typeOptions}
-        onchange={handleOutputTypeChange}></lightning-combobox>
-        
+        <div class="slds-p-horizontal--small slds-m-bottom--medium">
+            <div class="slds-form-element">
+                <lightning-input name="titulo" label="Título" value={titulo} placeholder="Insira o Título" onchange={contactChangeVal}></lightning-input>
+            </div>
+            
+            <div class="slds-form-element">
+                <lightning-textarea name="descricao" label="Descrição" value={descricao} placeholder="Insira o Nome" onchange={contactChangeVal}></lightning-textarea>
+            </div>
 
-        <lightning-button label="Registrar Avaliação"></lightning-button>
-        
+            <div class="slds-form-element">
+                <div class="slds-form-element__control">
+                    <lightning-combobox class="slds-m-bottom--medium" name="progress" label="Tipo de Contrato" value={value} placeholder="Selecione a nota" options={options} onchange={handleChange}></lightning-combobox>
+                </div>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <lightning-button label="Salvar" variant="success"></lightning-button>
+            </div>
+        </div>
     </lightning-card>
 </template>
