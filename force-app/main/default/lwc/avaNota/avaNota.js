@@ -1,7 +1,13 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, track } from 'lwc';
+import inserirAvaliacao from '@salesforce/apex/AvaController.inserirAvaliacao';
+
 
 export default class AvaNota extends LightningElement {
+    @track titulo = '';
+    @track descricao = '';
+    @track value = '';
 
+    
     get options() {
         return [
             { label: '1', value: '1' },
@@ -18,9 +24,26 @@ export default class AvaNota extends LightningElement {
     }
 
     contactChangeVal(event) {
-        const field = event.target.name;
-        if (field) {
-            this[field] = event.target.value;
+       
+        if (event.target.name === 'titulo') {
+            this.titulo = event.target.value;
+        } else if (event.target.name === 'descricao') {
+            this.descricao = event.target.value;
         }
     }
+
+    // Chame o método Apex para inserir os dados
+    handleClick() {
+        
+        inserirAvaliacao({ titulo: this.titulo, descricao: this.descricao, nota: this.value })
+            .then(result => {
+                
+                console.log('Inserção bem-sucedida:', result);
+            })
+            .catch(error => {
+              
+                console.error('Erro ao inserir:', error);
+            });
+    }
 }
+
