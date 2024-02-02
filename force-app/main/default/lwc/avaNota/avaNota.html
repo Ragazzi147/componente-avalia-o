@@ -17,7 +17,7 @@
 
             <div class="slds-form-element">
                 <div class="slds-form-element__control">
-                    <lightning-combobox class="slds-m-bottom--medium" name="progress" label="nota" value={value} placeholder="Selecione a nota" options={options} onchange={handleChange}></lightning-combobox>
+                    <lightning-combobox class="slds-m-bottom--medium" name="nota" label="nota" value={value} placeholder="Selecione a nota" options={options} onchange={contactChangeVal}></lightning-combobox>
                 </div>
             </div>
 
@@ -25,6 +25,8 @@
                 <lightning-button label="Salvar" variant="success" onclick={handleClick}></lightning-button>
             </div>
         </div>
+
+        <c-ava-tabela record-id={recordId} ></c-ava-tabela>
         
     </lightning-card>
 </template>

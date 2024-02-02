@@ -1,10 +1,13 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, api } from 'lwc';
 import inserirAvaliacao from '@salesforce/apex/AvaController.inserirAvaliacao';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 
 export default class AvaNota extends LightningElement {
-    @track titulo = '';
-    @track descricao = '';
-    @track value = '';
+    titulo = '';
+    descricao = '';
+    value = '';
+    nota = '';
+    @api recordId;
 
     get options() {
         return [
@@ -16,31 +19,35 @@ export default class AvaNota extends LightningElement {
         ];
     }
 
-    handleChange(event) {
-        this.value = event.detail.value;
+    contactChangeVal(event) {
+        const field = event.target.name;
+        if (field) {
+            this[field] = event.target.value
+        }
+
+
     }
 
-    contactChangeVal(event) {
-        if (event.target.name === 'titulo') {
-            this.titulo = event.target.value;
-        } else if (event.target.name === 'descricao') {
-            this.descricao = event.target.value;
-        }
-    }
 
     handleClick() {
-        inserirAvaliacao({ titulo: this.titulo, descricao: this.descricao, nota: this.value })
+
+        inserirAvaliacao({ titulo: this.titulo, descricao: this.descricao, nota: this.nota, accountId: this.recordId })
             .then(result => {
                 console.log('Inserção bem-sucedida:', result);
 
                 // Emitir um evento personalizado para notificar outros componentes
-                const successEvent = new CustomEvent('avaliacaoadicionada', {
-                    detail: result
-                });
-                this.dispatchEvent(successEvent);
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                    titulo: `Sucesso`,
+                    message: `Avaliação criada`,
+                    variant: `sucess`
+                })
+                );
             })
             .catch(error => {
                 console.error('Erro ao inserir:', error);
             });
+        console.log('recordId= ' + this.recordId);
     }
+
 }
