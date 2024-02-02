@@ -8,21 +8,17 @@ public with sharing class AvaController {
     @AuraEnabled
     public static String inserirAvaliacao(AvaliacaoWrapper avaliacao) {
         try {
-
             Avaliacao__c novoRegistro = new Avaliacao__c(
                 Titulo__c = avaliacao.titulo,
                 Descricao__c = avaliacao.descricao,
                 Nota__c = avaliacao.nota
             );
 
-            List<Avaliacao__c> listaParaInserir = new List<Avaliacao__c>{novoRegistro};
+            insert novoRegistro;
 
-
-            insert listaParaInserir;
-
-            return 'Sucesso';
+            return 'Avaliação cadastrada com sucesso.';
         } catch (Exception e) {
-            return 'Erro: ' + e.getMessage();
+            return 'Erro ao cadastrar avaliação: ' + e.getMessage();
         }
     }
 }
