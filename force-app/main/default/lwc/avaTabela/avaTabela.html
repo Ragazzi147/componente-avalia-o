@@ -1,9 +1,15 @@
 <template>
+   
     <lightning-card title="Avaliações">
+   <template if:true={getRecordsData}>
         <lightning-datatable
             key-field="Id"
             data={avaliacoes}
             columns={columns}
         ></lightning-datatable>
+    </template>
+    <template if:false={getRecordsData}>
+        <P>Nada encontrado!</P>
+    </template>
     </lightning-card>
 </template>

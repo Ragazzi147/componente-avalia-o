@@ -12,12 +12,25 @@ export default class AvaTabela extends LightningElement {
     avaliacoes = [];
     columns = columns;
 
-    @wire(getAvaliacoes, { accountId: '$recordId' })
-    wiredAvaliacoes({ error, data }) {
-        if (data) {
-            this.avaliacoes = data;
-        } else if (error) {
-            console.error('Erro ao obter avaliações:', error);
+    connectedCallback() {
+        this.retriveRecordAvaliacao();
+      }
+
+    
+
+    retriveRecordAvaliacao(){
+        getAvaliacoes({recordId: this.recordId})
+        .then(result => {
+            this.avaliacoes = result;
         }
+        )
     }
+
+    get getRecordsData() {
+        return this.avaliacoes.length!=0;
+      }
+
+    
+    
+
 }
