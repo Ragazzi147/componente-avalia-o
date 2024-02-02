@@ -7,12 +7,17 @@ public with sharing class AvaController {
     }
 
     @AuraEnabled
+    public static String getUserDetails(){
+        return UserInfo.getName();
+    }
+
+    @AuraEnabled
     public static Id inserirAvaliacao(String titulo, String descricao, Decimal nota, Id AccountId ) {
 
          Avaliacao__c novoRegistro = new Avaliacao__c(
                  Name = titulo,
                  Descricao__c = descricao,
-                 Nota__c = nota,
+                 nota__c = nota,
                  Account__c =AccountId
                  );
         
@@ -25,6 +30,6 @@ public with sharing class AvaController {
     }
      @AuraEnabled(cacheable=true)
       public static List<Avaliacao__c> getAvaliacoes(Id accountId) {
-          return [SELECT Id, Name, Descricao__c, Nota__c FROM Avaliacao__c WHERE Account__c = :accountId];
+          return [SELECT Id, Name, Descricao__c, nota__c FROM Avaliacao__c WHERE Account__c = :accountId];
       }
 }

@@ -1,6 +1,7 @@
 import { LightningElement, api } from 'lwc';
 import inserirAvaliacao from '@salesforce/apex/AvaController.inserirAvaliacao';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
+import getUserDetails from '@salesforce/apex/AvaController.getUserDetails';
 
 export default class AvaNota extends LightningElement {
     titulo = '';
@@ -8,6 +9,7 @@ export default class AvaNota extends LightningElement {
     value = '';
     nota = '';
     @api recordId;
+    userName;
 
     get options() {
         return [
@@ -29,6 +31,17 @@ export default class AvaNota extends LightningElement {
     }
 
 
+    retrieveDetails() {
+        getUserDetails()
+            .then(result => {
+                this.userName = result;
+            })
+            .catch(error => {
+                console.error('error', error);
+            })
+    }
+
+
     handleClick() {
 
         inserirAvaliacao({ titulo: this.titulo, descricao: this.descricao, nota: this.nota, accountId: this.recordId })
@@ -38,10 +51,10 @@ export default class AvaNota extends LightningElement {
                 // Emitir um evento personalizado para notificar outros componentes
                 this.dispatchEvent(
                     new ShowToastEvent({
-                    titulo: `Sucesso`,
-                    message: `Avaliação criada`,
-                    variant: `sucess`
-                })
+                        titulo: `Sucesso`,
+                        message: `Avaliação criada`,
+                        variant: `sucess`
+                    })
                 );
             })
             .catch(error => {
