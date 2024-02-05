@@ -14,14 +14,24 @@ public class AccountTriggerHandler {
     private static void calcularEAtualizarNota(Id accountId) {
         List<Avaliacao__c> avaliacoes = [SELECT Id, Nota__c FROM Avaliacao__c WHERE Account__c = :accountId];
         Decimal totalNotas = 0;
-    
+
+
         for (Avaliacao__c avaliacao : avaliacoes) {
-            totalNotas += avaliacao.Nota__c;
+            totalNotas += avaliacao.nota__c;
         }
-    
+
         Decimal mediaNota = avaliacoes.isEmpty() ? 0 : totalNotas / avaliacoes.size();
-    
-        Account conta = new Account(Id = accountId, Nota_da_Conta__c = mediaNota.round());
-        update conta;
+
+        // Atualizar a conta com a média das notas no campo Nota_da_Conta__c
+        Account conta = new Account(Id = accountId, Nota_da_Conta__c = mediaNota);
+
+        
+
+        try {
+            update conta;
+        } catch (Exception e) {
+            // Lida com exceções ao atualizar a conta, se necessário.
+            System.debug('Error updating account: ' + e.getMessage());
+        }
     }
 }

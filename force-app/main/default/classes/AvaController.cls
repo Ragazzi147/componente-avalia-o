@@ -12,15 +12,16 @@ public with sharing class AvaController {
     }
 
     @AuraEnabled
-    public static Id inserirAvaliacao(String titulo, String descricao, Decimal nota, Id AccountId ) {
+    public static Id inserirAvaliacao(String titulo, String descricao, Decimal nota, String AccountId ) {
+        system.debug(AccountId);
 
          Avaliacao__c novoRegistro = new Avaliacao__c(
                  Name = titulo,
                  Descricao__c = descricao,
                  nota__c = nota,
-                 Account__c =AccountId
+                 Account__c = AccountId
                  );
-        
+        System.debug(novoRegistro);
         try {
             insert novoRegistro;
             return novoRegistro.Id;
@@ -32,4 +33,16 @@ public with sharing class AvaController {
       public static List<Avaliacao__c> getAvaliacoes(Id accountId) {
           return [SELECT Id, Name, Descricao__c, nota__c FROM Avaliacao__c WHERE Account__c = :accountId];
       }
+
+      @AuraEnabled(cacheable=true)
+    public static Decimal getMediaNotas(Id accountId) {
+        AggregateResult result = [
+            SELECT AVG(nota__c) averageNota
+            FROM Avaliacao__c
+            WHERE Account__c = :accountId
+        ];
+
+        return (Decimal)result.get('averageNota');
+    }
+   
 }

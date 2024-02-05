@@ -42,9 +42,10 @@ export default class AvaNota extends LightningElement {
     }
 
 
-    handleClick() {
 
-        inserirAvaliacao({ titulo: this.titulo, descricao: this.descricao, nota: this.nota, accountId: this.recordId })
+    handleClick() {
+        console.log(this.recordId);
+        inserirAvaliacao({ titulo: this.titulo, descricao: this.descricao, nota: this.nota, AccountId: this.recordId })
             .then(result => {
                 console.log('Inserção bem-sucedida:', result);
 
