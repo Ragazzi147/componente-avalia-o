@@ -3,7 +3,7 @@ public with sharing class AvaController {
         @AuraEnabled public String titulo;
         @AuraEnabled public String descricao;
         @AuraEnabled public Decimal nota;
-        @AuraEnabled public Id AccountId;
+        @AuraEnabled public Id accountId;
     }
 
     @AuraEnabled
@@ -12,14 +12,14 @@ public with sharing class AvaController {
     }
 
     @AuraEnabled
-    public static Id inserirAvaliacao(String titulo, String descricao, Decimal nota, String AccountId ) {
-        system.debug(AccountId);
+    public static Id inserirAvaliacao(String titulo, String descricao, Decimal nota, String accountId ) {
+        system.debug(accountId);
 
          Avaliacao__c novoRegistro = new Avaliacao__c(
                  Name = titulo,
                  Descricao__c = descricao,
                  nota__c = nota,
-                 Account__c = AccountId
+                 Account__c = accountId
                  );
         System.debug(novoRegistro);
         try {

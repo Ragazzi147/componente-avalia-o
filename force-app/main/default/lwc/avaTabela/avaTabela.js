@@ -48,6 +48,6 @@ export default class AvaTabela extends LightningElement {
 
     get getRecordsData() {
         
-        return this.avaliacoes && this.avaliacoes.length > 0;
+        return this.avaliacoes !== 0;
     }
 }
