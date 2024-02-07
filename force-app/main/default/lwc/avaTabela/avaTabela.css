@@ -1,0 +1,11 @@
+.scrollable-section {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.custom-datatable-style tbody tr:nth-child(even) {
+  background-color: #60d2ff;
+}
+.custom-datatable-style tbody tr:nth-child(odd) {
+  background-color: #0570fc;
+}

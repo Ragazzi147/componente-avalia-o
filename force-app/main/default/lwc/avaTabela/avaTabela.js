@@ -1,17 +1,20 @@
 import { LightningElement, api } from 'lwc';
 import getAvaliacoes from '@salesforce/apex/AvaController.getAvaliacoes';
 import getMediaNotas from '@salesforce/apex/AvaController.getMediaNotas';
+import getUserDetails from '@salesforce/apex/AvaController.getUserDetails';
 
 const columns = [
-    { label: 'Título', fieldName: 'Name' },
-    { label: 'Descrição', fieldName: 'Descricao__c' },
-    { label: 'Nota', fieldName: 'nota__c' }
+    { label: 'Nome do Avaliador', fieldName: 'userName'},
+    { label: 'Título', fieldName: 'titulo' },
+    { label: 'Descrição', fieldName: 'descricao' },
+    { label: 'Nota', fieldName: 'nota' }
 ];
 
 export default class AvaTabela extends LightningElement {
     @api recordId;
     avaliacoes = [];
     mediaNotas;
+  
 
     columns = columns;
 
@@ -19,13 +22,26 @@ export default class AvaTabela extends LightningElement {
        
         this.retrieveRecordAvaliacao();
         this.retrieveMediaNotas();
+        this.retrieveDetails();
 
     }
 
-    refreshTable() {
-        this.connectedCallback();
+    retrieveDetails() {
+        getUserDetails()
+            .then(result => {
+                this.userName = result;
+            })
+            .catch(error => {
+                console.error('error', error);
+            })
     }
+    
+    // @api
+    // refreshData(){
+    //     this.connectedCallback();
+    // }
 
+ 
     retrieveRecordAvaliacao() {
         getAvaliacoes({ recordId: this.recordId })
             .then(result => {
@@ -45,6 +61,7 @@ export default class AvaTabela extends LightningElement {
                 console.error('Error retrieving average nota:', error);
             });
     }
+
 
     get getRecordsData() {
         

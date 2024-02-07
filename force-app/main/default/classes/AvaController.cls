@@ -12,7 +12,7 @@ public with sharing class AvaController {
     }
 
     @AuraEnabled
-    public static Id inserirAvaliacao(String titulo, String descricao, Decimal nota, String accountId ) {
+    public static Id inserirAvaliacao(String titulo, String descricao, Decimal nota, Id accountId ) {
         system.debug(accountId);
 
          Avaliacao__c novoRegistro = new Avaliacao__c(
@@ -29,12 +29,19 @@ public with sharing class AvaController {
             return 'Erro ao cadastrar avaliação: ' + e.getMessage();
         }
     }
-     @AuraEnabled(cacheable=true)
-      public static List<Avaliacao__c> getAvaliacoes(Id accountId) {
-          return [SELECT Id, Name, Descricao__c, nota__c FROM Avaliacao__c WHERE Account__c = :accountId];
-      }
+     @AuraEnabled
+      public static List<AvaVO> getAvaliacoes(Id accountId) {
+        List<Avaliacao__c> avaliacoes = AvaDAO.AvaDAO(accountId);
+        List<AvaVO> avaliacoesVO = new List<AvaVO>();
+        for (Avaliacao__c av  : avaliacoes) {
+            AvaVO listAva = new  AvaVO(av);
+            avaliacoesVO.add(listAva);
+        }
+        
+        return avaliacoesVO;
+    }
 
-      @AuraEnabled(cacheable=true)
+      @AuraEnabled
     public static Decimal getMediaNotas(Id accountId) {
         AggregateResult result = [
             SELECT AVG(nota__c) averageNota

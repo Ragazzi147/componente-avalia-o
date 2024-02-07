@@ -11,6 +11,12 @@ export default class AvaNota extends LightningElement {
     @api recordId;
     userName;
 
+
+    connectedCallback() {
+        this. retrieveDetails();
+    }
+
+
     get options() {
         return [
             { label: '1', value: '1' },
@@ -42,10 +48,9 @@ export default class AvaNota extends LightningElement {
     }
 
 
-
     handleClick() {
         console.log(this.recordId);
-        inserirAvaliacao({ titulo: this.titulo, descricao: this.descricao, nota: this.nota, AccountId: this.recordId })
+        inserirAvaliacao({ titulo: this.titulo, descricao: this.descricao, nota: this.nota, accountId: this.recordId })
             .then(result => {
                 console.log('Inserção bem-sucedida:', result);
 
@@ -54,7 +59,7 @@ export default class AvaNota extends LightningElement {
                     new ShowToastEvent({
                         titulo: `Sucesso`,
                         message: `Avaliação criada`,
-                        variant: `sucess`
+                        variant: `success`
                     })
                 );
             })
@@ -63,5 +68,4 @@ export default class AvaNota extends LightningElement {
             });
         console.log('recordId= ' + this.recordId);
     }
-
 }
