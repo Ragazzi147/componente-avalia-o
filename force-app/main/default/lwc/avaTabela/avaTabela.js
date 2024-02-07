@@ -1,7 +1,7 @@
 import { LightningElement, api } from 'lwc';
 import getAvaliacoes from '@salesforce/apex/AvaController.getAvaliacoes';
 import getMediaNotas from '@salesforce/apex/AvaController.getMediaNotas';
-import getUserDetails from '@salesforce/apex/AvaController.getUserDetails';
+
 
 const columns = [
     { label: 'Nome do Avaliador', fieldName: 'userName'},
@@ -22,28 +22,19 @@ export default class AvaTabela extends LightningElement {
        
         this.retrieveRecordAvaliacao();
         this.retrieveMediaNotas();
-        this.retrieveDetails();
-
+       
+        console.log('recordId: ', this.recordId);
     }
 
-    retrieveDetails() {
-        getUserDetails()
-            .then(result => {
-                this.userName = result;
-            })
-            .catch(error => {
-                console.error('error', error);
-            })
-    }
     
-    // @api
-    // refreshData(){
-    //     this.connectedCallback();
-    // }
+    @api
+    refreshData(){
+        this.connectedCallback();
+    }
 
  
     retrieveRecordAvaliacao() {
-        getAvaliacoes({ recordId: this.recordId })
+        getAvaliacoes({ accountId: this.recordId })
             .then(result => {
                 this.avaliacoes = result;
             })
@@ -65,6 +56,6 @@ export default class AvaTabela extends LightningElement {
 
     get getRecordsData() {
         
-        return this.avaliacoes !== 0;
+        return this.avaliacoes != 0;
     }
 }

@@ -48,9 +48,9 @@ export default class AvaNota extends LightningElement {
     }
 
 
-    handleClick() {
+   async handleClick() {
         console.log(this.recordId);
-        inserirAvaliacao({ titulo: this.titulo, descricao: this.descricao, nota: this.nota, accountId: this.recordId })
+        const resultado = await inserirAvaliacao({ titulo: this.titulo, descricao: this.descricao, nota: this.nota, accountId: this.recordId })
             .then(result => {
                 console.log('Inserção bem-sucedida:', result);
 
@@ -67,5 +67,11 @@ export default class AvaNota extends LightningElement {
                 console.error('Erro ao inserir:', error);
             });
         console.log('recordId= ' + this.recordId);
+        if(resultado){
+            const avaTab = this.template.querySelector('c-ava-tabela');
+            if(avaTab) {
+                avaTab.refreshData();
+            }
+        }
     }
 }
