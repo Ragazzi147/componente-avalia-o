@@ -13,7 +13,7 @@ export default class AvaNota extends LightningElement {
 
 
     connectedCallback() {
-        this. retrieveDetails();
+        this.retrieveDetails();
     }
 
 
@@ -48,30 +48,48 @@ export default class AvaNota extends LightningElement {
     }
 
 
-   async handleClick() {
+    async handleClick() {
         console.log(this.recordId);
-        const resultado = await inserirAvaliacao({ titulo: this.titulo, descricao: this.descricao, nota: this.nota, accountId: this.recordId })
-            .then(result => {
-                console.log('Inserção bem-sucedida:', result);
 
-                // Emitir um evento personalizado para notificar outros componentes
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        titulo: `Sucesso`,
-                        message: `Avaliação criada`,
-                        variant: `success`
-                    })
-                );
+        try {
+            const resultado = await inserirAvaliacao({
+                titulo: this.titulo,
+                descricao: this.descricao,
+                nota: this.nota,
+                accountId: this.recordId
             })
-            .catch(error => {
-                console.error('Erro ao inserir:', error);
-            });
-        console.log('recordId= ' + this.recordId);
-        if(resultado){
-            const avaTab = this.template.querySelector('c-ava-tabela');
-            if(avaTab) {
-                avaTab.refreshData();
+
+            if (resultado) {
+                const avaTab = this.template.querySelector('c-ava-tabela');
+                if (avaTab) {
+                    avaTab.refreshData();
+                }
             }
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    titulo: `Sucesso`,
+                    message: `Avaliação criada`,
+                    variant: `success`
+                })
+            );
+
+
+        } catch (error) {
+            console.error(error);
+            // Extrair a mensagem de erro da exceção
+            let errorMessage = 'Ocorreu um erro ao criar a avaliação.';
+            if (error.body && error.body.message) {
+                errorMessage = error.body.message;
+            }
+            // Exibir uma mensagem de erro
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Erro',
+                    message: 'Ocorreu um erro ao criar a avaliação.' + errorMessage,
+                    variant: 'error'
+                })
+            );
+
         }
     }
 }
