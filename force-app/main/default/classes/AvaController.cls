@@ -14,12 +14,14 @@ public with sharing class AvaController {
     @AuraEnabled
     public static Id inserirAvaliacao(String titulo, String descricao, Decimal nota, Id accountId ) {
         system.debug(accountId);
-
+        
          Avaliacao__c novoRegistro = new Avaliacao__c(
                  Name = titulo,
                  Descricao__c = descricao,
                  nota__c = nota,
                  Account__c = accountId
+                 
+                 
                  );
         System.debug(novoRegistro);
         try {
