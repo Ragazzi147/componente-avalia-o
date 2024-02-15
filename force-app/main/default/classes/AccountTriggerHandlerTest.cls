@@ -3,40 +3,59 @@ private class AccountTriggerHandlerTest {
 
     @isTest
     static void testAtualizarNotaConta() {
-        // Criação de Avaliações de Teste
+        // criação de Avaliações 
         List<Avaliacao__c> avaliacoesTeste = new List<Avaliacao__c>();
         for (Integer i = 1; i <= 3; i++) {
             Avaliacao__c av = new Avaliacao__c(
                 Name = 'Test Avaliacao ' + i,
                 nota__c = 3.0 + i
-                // Adicione outros campos necessários
+                
             );
-            // Ajuste para garantir que a nota esteja no intervalo permitido
+
+            // Ajuste para poder apenas notas de 1 a 5
             if (av.nota__c > 5) {
                 av.nota__c = 5.0;
             }
             if (av.nota__c < 1) {
                 av.nota__c = 1.0;
             }
+
             avaliacoesTeste.add(av);
         }
         insert avaliacoesTeste;
 
-        // Obtém a conta associada às avaliações de teste
-        Id accountId = avaliacoesTeste[0].Account__c;
+        // criação de uma Conta 
+        Account contaTeste = new Account(Name = 'Test Account');
+        insert contaTeste;
 
-        // Executa a lógica que precisa ser testada
+        // mapeia Avaliações para Conta de Teste
+        Map<Id, Avaliacao__c> mapAvaliacoes = new Map<Id, Avaliacao__c>();
+        for (Avaliacao__c av : avaliacoesTeste) {
+            av.Account__c = contaTeste.Id;
+            mapAvaliacoes.put(av.Id, av);
+        }
+        update avaliacoesTeste;
+
+        
         Test.startTest();
-        // Chama o método estático da classe de trigger handler
-        AccountTriggerHandler.atualizarNotaConta(avaliacoesTeste, new Map<Id, Avaliacao__c>());
+        AccountTriggerHandler.atualizarNotaConta(avaliacoesTeste, mapAvaliacoes);
         Test.stopTest();
 
-        // Verifica se a média da nota da conta foi atualizada corretamente
-        Account contaAtualizada = [SELECT Id, Nota_da_Conta__c FROM Account WHERE Id = :accountId LIMIT 1];
+        // ve se a conta foi atualizada 
+        Account contaAtualizada = [SELECT Id, Nota_da_Conta__c FROM Account WHERE Id = :contaTeste.Id LIMIT 1];
+        System.assertNotEquals(null, contaAtualizada);
+        
+        // calculo media
+        Decimal mediaEsperada = (3.0 + 4.0 + 5.0) / 3;
 
-        // Certifica-se de que a conta foi encontrada e a nota foi calculada corretamente
-        System.assertNotEquals(null, contaAtualizada, 'A conta não foi encontrada.');
-        Decimal mediaEsperada = (3.0 + 4.0 + 5.0) / 3; // Média das notas de teste
-        System.assertEquals(mediaEsperada, contaAtualizada.Nota_da_Conta__c, 'A média de notas não está correta.');
+        // compara apenas o numero inteiro
+        System.assertEquals(mediaEsperada.intValue(), contaAtualizada.Nota_da_Conta__c.intValue());
+
+        
+        delete contaTeste;
+        delete avaliacoesTeste;
     }
+
+  
+
 }
