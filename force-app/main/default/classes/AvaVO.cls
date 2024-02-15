@@ -1,4 +1,4 @@
-public with sharing class AvaVO {
+public with sharing class AvaVO { // TODO: faltou classe de teste
     
     public AvaVO(Avaliacao__c ava) {
         this.titulo = ava.Name;

@@ -11,10 +11,10 @@ public class AccountTriggerHandler {
         }
     }
 
-    private static void calcularEAtualizarNota(Id accountId) {
-        List<Avaliacao__c> avaliacoes = [SELECT Id, Nota__c FROM Avaliacao__c WHERE Account__c = :accountId];
+    public static void calcularEAtualizarNota(Id accountId) {
+        // TODO: Substituir a chamada direta para o DAO
+        List<Avaliacao__c> avaliacoes = AvaDAO.AvaDAO(accountId);
         Decimal totalNotas = 0;
-
 
         for (Avaliacao__c avaliacao : avaliacoes) {
             totalNotas += avaliacao.nota__c;
@@ -24,8 +24,6 @@ public class AccountTriggerHandler {
 
         // Atualizar a conta com a média das notas no campo Nota_da_Conta__c
         Account conta = new Account(Id = accountId, Nota_da_Conta__c = mediaNota);
-
-        
 
         try {
             update conta;

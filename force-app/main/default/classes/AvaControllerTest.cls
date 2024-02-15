@@ -2,25 +2,26 @@
 private class AvaControllerTest {
     @isTest
     static void testInserirAvaliacao() {
-       
+        // Cria uma conta de teste
         Account testAccount = new Account(Name = 'Test Account');
         insert testAccount;
 
-  
+        // Chama o método inserirAvaliacao
         Id novoIdAvaliacao = AvaController.inserirAvaliacao('Título de Teste', 'Descrição de Teste', 1, testAccount.Id);
 
-        // Verifica se foi criada corretamente
+        // Verifica se a nova avaliação foi criada com sucesso
         System.assertNotEquals(null, novoIdAvaliacao);
 
+        // Consulta o registro de Avaliação inserido
         Avaliacao__c avaliacaoInserida = [SELECT Id, Name, Descricao__c, nota__c, Account__c FROM Avaliacao__c WHERE Id = :novoIdAvaliacao LIMIT 1];
 
-        // verifica a Avaliação 
+        // Verifica os detalhes da Avaliação inserida
         System.assertEquals('Título de Teste', avaliacaoInserida.Name);
         System.assertEquals('Descrição de Teste', avaliacaoInserida.Descricao__c);
         System.assertEquals(1, avaliacaoInserida.nota__c);
         System.assertEquals(testAccount.Id, avaliacaoInserida.Account__c);
 
-        
+        // Limpa os dados de teste
         delete testAccount;
     }
     
@@ -47,11 +48,12 @@ private class AvaControllerTest {
         Account testAccount = new Account(Name = 'Test Account');
         insert testAccount;
     
-    
+       
         Decimal mediaNotas = AvaController.getMediaNotas(testAccount.Id);
     
         System.assertEquals(null, mediaNotas, 'A média de notas deve ser nula');
     
+       
         delete testAccount;
     }
     
