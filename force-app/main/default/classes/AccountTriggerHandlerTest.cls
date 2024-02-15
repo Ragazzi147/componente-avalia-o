@@ -1,8 +1,8 @@
 @isTest
 private class AccountTriggerHandlerTest {
 
-    @isTest
-    static void testAtualizarNotaConta() {
+    @testSetup
+    static void setup() {
         // criação de Avaliações 
         List<Avaliacao__c> avaliacoesTeste = new List<Avaliacao__c>();
         for (Integer i = 1; i <= 3; i++) {
@@ -27,6 +27,13 @@ private class AccountTriggerHandlerTest {
         // criação de uma Conta 
         Account contaTeste = new Account(Name = 'Test Account');
         insert contaTeste;
+    }
+
+    @isTest
+    static void testAtualizarNotaConta() {
+      
+        List<Avaliacao__c> avaliacoesTeste = [SELECT Id, Name, nota__c, Account__c FROM Avaliacao__c];
+        Account contaTeste = [SELECT Id, Name FROM Account];
 
         // mapeia Avaliações para Conta de Teste
         Map<Id, Avaliacao__c> mapAvaliacoes = new Map<Id, Avaliacao__c>();
@@ -36,7 +43,6 @@ private class AccountTriggerHandlerTest {
         }
         update avaliacoesTeste;
 
-        
         Test.startTest();
         AccountTriggerHandler.atualizarNotaConta(avaliacoesTeste, mapAvaliacoes);
         Test.stopTest();
@@ -50,12 +56,5 @@ private class AccountTriggerHandlerTest {
 
         // compara apenas o numero inteiro
         System.assertEquals(mediaEsperada.intValue(), contaAtualizada.Nota_da_Conta__c.intValue());
-
-        
-        delete contaTeste;
-        delete avaliacoesTeste;
     }
-
-  
-
 }

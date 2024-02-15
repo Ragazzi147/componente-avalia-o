@@ -1,13 +1,13 @@
 @isTest
 private class AvaDAOTest {
 
-    @isTest
-    static void testAvaDAO() {
-        // Crie uma conta de teste
+    @testSetup
+    static void setupTestData() {
+        // criando conta de teste
         Account contaTeste = new Account(Name = 'Conta de Teste');
         insert contaTeste;
 
-        // Crie uma avaliação associada à conta de teste
+       
         Avaliacao__c avaliacaoTeste = new Avaliacao__c(
             Name = 'Avaliacao de Teste',
             Descricao__c = 'Descrição Teste',
@@ -15,15 +15,18 @@ private class AvaDAOTest {
             Account__c = contaTeste.Id
         );
         insert avaliacaoTeste;
+    }
 
-        // Execute o método da AvaDAO para obter avaliações associadas à conta de teste
+    @isTest
+    static void testAvaDAO() {
+        // pega a conta de testSetup
+        Account contaTeste = [SELECT Id FROM Account WHERE Name = 'Conta de Teste' LIMIT 1];
+
+        // executa o método da AvaDAO para obter avaliações associadas à conta de teste
         List<Avaliacao__c> avaliacoesObtidas = AvaDAO.AvaDAO(contaTeste.Id);
 
-        // Verifique se a avaliação de teste está presente na lista
+        // ve se avaliacao esta na lista
         System.assertEquals(1, avaliacoesObtidas.size());
-        System.assertEquals(avaliacaoTeste.Id, avaliacoesObtidas[0].Id);
-
-        // Limpe os dados de teste
-        delete contaTeste;
+        System.assertEquals('Avaliacao de Teste', avaliacoesObtidas[0].Name);
     }
 }

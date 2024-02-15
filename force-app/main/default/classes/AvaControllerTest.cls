@@ -1,60 +1,72 @@
 @isTest
 private class AvaControllerTest {
-    @isTest
-    static void testInserirAvaliacao() {
-        // Cria uma conta de teste
+    @testSetup
+    static void setup() {
+        // conta de teste
         Account testAccount = new Account(Name = 'Test Account');
         insert testAccount;
 
-        // Chama o método inserirAvaliacao
+     
+        Avaliacao__c avaliacao1 = new Avaliacao__c(
+            Name = 'Avaliacao 1',
+            Descricao__c = 'Descrição 1',
+            nota__c = 2.0,
+            Account__c = testAccount.Id
+        );
+        Avaliacao__c avaliacao2 = new Avaliacao__c(
+            Name = 'Avaliacao 2',
+            Descricao__c = 'Descrição 2',
+            nota__c = 4.0,
+            Account__c = testAccount.Id
+        );
+        insert new List<Avaliacao__c>{avaliacao1, avaliacao2};
+    }
+
+    @isTest
+    static void testInserirAvaliacao() {
+     
+        Account testAccount = [SELECT Id FROM Account WHERE Name = 'Test Account' LIMIT 1];
+
+        // chama inserirAvaliacao
         Id novoIdAvaliacao = AvaController.inserirAvaliacao('Título de Teste', 'Descrição de Teste', 1, testAccount.Id);
 
-        // Verifica se a nova avaliação foi criada com sucesso
+        // verifica se deu certo
         System.assertNotEquals(null, novoIdAvaliacao);
 
-        // Consulta o registro de Avaliação inserido
+        //consulta resgistro de av inserida
         Avaliacao__c avaliacaoInserida = [SELECT Id, Name, Descricao__c, nota__c, Account__c FROM Avaliacao__c WHERE Id = :novoIdAvaliacao LIMIT 1];
 
-        // Verifica os detalhes da Avaliação inserida
+        // verifica os detalhes 
         System.assertEquals('Título de Teste', avaliacaoInserida.Name);
         System.assertEquals('Descrição de Teste', avaliacaoInserida.Descricao__c);
         System.assertEquals(1, avaliacaoInserida.nota__c);
         System.assertEquals(testAccount.Id, avaliacaoInserida.Account__c);
-
-        // Limpa os dados de teste
-        delete testAccount;
     }
-    
-
 
     @isTest
     static void testGetAvaliacoes() {
        
-        Account testAccount = new Account(Name = 'Test Account');
-        insert testAccount;
+        Account testAccount = [SELECT Id FROM Account WHERE Name = 'Test Account' LIMIT 1];
 
-        // Chama o metodo
+        // chama o método
         List<AvaVO> avaliacoesList = AvaController.getAvaliacoes(testAccount.Id);
 
-        // verifica se é vazio
+        // verifica se não está vazio
         System.assertNotEquals(null, avaliacoesList);
-
-        delete testAccount;
     }
+
 
     @isTest
     static void testGetMediaNotas() {
-       
-        Account testAccount = new Account(Name = 'Test Account');
-        insert testAccount;
-    
-       
+        // obtém a conta de teste
+        Account testAccount = [SELECT Id FROM Account WHERE Name = 'Test Account' LIMIT 1];
+
+        // chama o método getMediaNotas
+        Test.startTest();
         Decimal mediaNotas = AvaController.getMediaNotas(testAccount.Id);
-    
-        System.assertEquals(null, mediaNotas, 'A média de notas deve ser nula');
-    
-       
-        delete testAccount;
+        Test.stopTest();
+
+        // verifica se a média de notas é 3.0
+        System.assertEquals(3.0, mediaNotas, 'A média de notas deve ser 3.0');
     }
-    
 }
